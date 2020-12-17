@@ -1,7 +1,0 @@
-*.pyc
-.DC_Store
-.xml
-venv
-.idea
-/shelf/
-/workspace.xml
