@@ -2,8 +2,6 @@ from math import sqrt
 
 
 class Point:
-    pi = 3.14
-
     def __init__(self, x: int, y: int):
         self.x = x
         self.y = y
