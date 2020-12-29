@@ -7,10 +7,11 @@ class Mammal:
         self.sound = sound
 
     def make_sound(self):
-        return f"{self.name} make {self.sound}"
+        return f"{self.name} makes {self.sound}"
 
-    def get_kingdom(self):
-        return self.__kingdom
+    @classmethod
+    def get_kingdom(cls):
+        return cls.__kingdom
 
     def info(self):
         return f"{self.name} is of type {self.type}"
