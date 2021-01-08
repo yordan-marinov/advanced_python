@@ -11,9 +11,10 @@ class CatTests(unittest.TestCase):
         self.assertEqual(self.cat.name, "Jordan")
 
     def test_eat_method_raise_exception_if_cat_fed(self):
-        self.cat.fed = True
-        with self.assertRaises(Exception):
+        self.cat.eat()
+        with self.assertRaises(Exception) as context:
             self.cat.eat()
+        self.assertTrue('Already fed.' in str(context.exception))
 
     def test_increase_size_after_eat_by_one(self):
         self.cat.eat()
@@ -23,18 +24,13 @@ class CatTests(unittest.TestCase):
         self.cat.eat()
         self.assertTrue(self.cat.fed)
 
-    def test_after_fed_cat_raise_error(self):
-        self.cat.fed = True
-        with self.assertRaises(Exception):
-            self.cat.eat()
-
     def test_cat_cannot_sleep_if_not_fed(self):
-        with self.assertRaises(Exception):
+        with self.assertRaises(Exception) as context:
             self.cat.sleep()
+        self.assertTrue('Cannot sleep while hungry' in str(context.exception))
 
     def test_cat_not_sleepy_after_sleep_method(self):
         self.cat.eat()
-        # self.cat.sleepy = True
         self.cat.sleep()
         self.assertFalse(self.cat.sleepy)
 
