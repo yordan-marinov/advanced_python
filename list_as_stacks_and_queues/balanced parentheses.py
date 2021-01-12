@@ -12,27 +12,57 @@ You will be given three types of parentheses:
 {[(])} - This is not a balanced parenthesis.
 """
 
-brackets = input()
+# brackets = input()
+#
+# stack = []
+# for bracket in brackets:
+#     if bracket in ["(", "[", "{"]:
+#         stack.append(bracket)
+#         continue
+#
+#     is_balanced = stack and (
+#         (bracket == ")" and stack[-1] == "(") or
+#         (bracket == "]" and stack[-1] == "[") or
+#         (bracket == "}" and stack[-1] == "{")
+#     )
+#
+#     if is_balanced:
+#         stack.pop()
+#     else:
+#         break
+#
+# if is_balanced:
+#     print("YES")
+# else:
+#     print("NO")
+#
+
+from collections import deque
+
+brackets = deque(input())
+
+OPEN_PARENTHESES = {"(", "[", "{"}
+PARENTHESES_PAIRS = {
+    ")": "(",
+    "]": "[",
+    "}": "{"
+}
 
 stack = []
-for bracket in brackets:
-    if bracket in ["(", "[", "{"]:
-        stack.append(bracket)
+is_balanced = True
+for _ in range(len(brackets)):
+    current_bracket = brackets.popleft()
+    if current_bracket in OPEN_PARENTHESES:
+        stack.append(current_bracket)
         continue
 
-    is_balanced = stack and (
-        (bracket == ")" and stack[-1] == "(") or
-        (bracket == "]" and stack[-1] == "[") or
-        (bracket == "}" and stack[-1] == "{")
-    )
-
-    if is_balanced:
-        stack.pop()
-    else:
+    if not stack or PARENTHESES_PAIRS[current_bracket] != stack[-1]:
+        is_balanced = False
         break
+
+    stack.pop()
 
 if is_balanced:
     print("YES")
 else:
     print("NO")
- 
