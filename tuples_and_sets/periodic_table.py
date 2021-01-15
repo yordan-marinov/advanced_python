@@ -1,12 +1,12 @@
-def getting_elements(n: int):
-    elements = set()
+def get_unique_elements(n: int) -> str:
+    elements_set = set()
     for _ in range(n):
-        current_elements = set(
-            [items for items in input().split()]
-        )
-        elements |= current_elements
-    return elements
+        for element in input().split():
+            elements_set.add(element)
+
+    return "\n".join(elements_set)
 
 
-number = int(input())
-print("\n".join([str(e) for e in getting_elements(number)]))
+n = int(input())
+
+print(get_unique_elements(n))
