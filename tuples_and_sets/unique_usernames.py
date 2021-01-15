@@ -8,3 +8,7 @@ def usernames(n: int):
 number = int(input())
 
 print("\n".join(usernames(number)))
+
+# =========================================================
+
+print("\n".join(set(input() for _ in range(int(input())))))
