@@ -1,18 +1,16 @@
-def symbol_in_matrix(mtx, search_symbol):
+def search_symbol_in_matrix(matrix, symbol) -> str:
     for i in range(len(matrix)):
         for j in range(len(matrix[i])):
-            is_found = matrix[i][j] == searched_symbol
-            if is_found:
-                return i, j
+            if matrix[i][j] == symbol:
+                return f"{(i, j)}"
+
+    return f"{symbol} does not occur in the matrix"
 
 
-number = int(input())
-matrix = [list(input()) for _ in range(number)]
+n = int(input())
+
+matrix_input = [list(input()) for _ in range(n)]
+
 searched_symbol = input()
 
-result = symbol_in_matrix(matrix, searched_symbol)
-
-if result:
-    print(result)
-else:
-    print(f"{searched_symbol} does not occur in the matrix")
+print(search_symbol_in_matrix(matrix_input, searched_symbol))
