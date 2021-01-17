@@ -25,3 +25,13 @@ print(matrix_sum)
 print(matrix)
 
 
+# ============================================
+from itertools import chain
+
+rows, cols = [int(i)for i in input().split(", ")]
+
+matrix = [[int(n) for n in input().split(", ")]for _ in range(rows)]
+matrix_sum = sum(chain(*matrix))
+
+print(matrix_sum)
+print(matrix)
