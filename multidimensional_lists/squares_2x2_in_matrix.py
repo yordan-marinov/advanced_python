@@ -25,9 +25,9 @@ def find_number_equal_matrices(matrix) -> int:
 
     counter = 0
     for matrix in list_of_matrices_two_by_two():
-        matrix_as_line = list(chain(*matrix))
-        if all(matrix_as_line[0] == letter for letter in matrix_as_line):
+        if len(set(chain(*matrix))) == 1:
             counter += 1
+            
     return counter
 
 
