@@ -27,7 +27,7 @@ def find_number_equal_matrices(matrix) -> int:
     for matrix in list_of_matrices_two_by_two():
         if len(set(chain(*matrix))) == 1:
             counter += 1
-            
+
     return counter
 
 
