@@ -39,7 +39,7 @@ print(sum_of_primer_diagonal_matrix(matrix_input))
 
 def sum_of_non_primary_diagonal_matrix(matrix) -> int:
     side_length = len(matrix) - 1
-    return sum([matrix[side_length - i][i] for i in range(side_length, -1, -1)])
+    return sum([matrix[i][side_length - i] for i in range(len(matrix))])
 
 
 print(sum_of_non_primer_diagonal_matrix(matrix_input))
