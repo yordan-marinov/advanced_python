@@ -6,8 +6,8 @@ def get_abs_difference(n) -> int:
 
     def secondary_diagonal() -> int:
         side_length = len(matrix) - 1
-        # return sum([matrix[side_length - i][i] for i in range(side_length, -1, -1)])
         return sum([matrix[i][side_length - i] for i in range(len(matrix))])
+
     return abs(primary_diagonal() - secondary_diagonal())
 
 
