@@ -53,7 +53,8 @@ EXPLODED_VALUE = 0
 for bomb_coordinate in bombs_coordinates:
     row, col = bomb_coordinate
     bomb_value = matrix_from_input[row][col]
-    bomb_explosion(matrix_from_input, row, col, bomb_value, EXPLODED_VALUE)
+    if bomb_value > EXPLODED_VALUE:
+        bomb_explosion(matrix_from_input, row, col, bomb_value, EXPLODED_VALUE)
 
 
 print(all_positive_numbers_in_final_matrix(matrix_from_input, EXPLODED_VALUE))
