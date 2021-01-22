@@ -3,7 +3,7 @@ def input_matrix() -> [[int]]:
     return [[int(n) for n in input().split(", ")] for _ in range(square_size)]
 
 
-def print_diagonals_and_there_sums(matrix):
+def print_diagonals_and_their_sums(matrix):
     size = len(matrix)
 
     def first_diagonal():
@@ -16,4 +16,4 @@ def print_diagonals_and_there_sums(matrix):
 Second diagonal: {', '.join(str(n) for n in second_diagonal())}. Sum: {sum(second_diagonal())}"""
 
 
-print(print_diagonals_and_there_sums(input_matrix()))
+print(print_diagonals_and_their_sums(input_matrix()))
