@@ -29,8 +29,7 @@ total_quantity = 0
 total_quality = 0
 
 for _ in range(int(input())):
-    input_data = input()
-    category, name, quantity_quality_values = split_data(input_data)
+    category, name, quantity_quality_values = split_data(input())
     dict_of_item_categories[category][name] = quantity_quality_values
     total_quantity += quantity_quality_values[0]
     total_quality += quantity_quality_values[1]
