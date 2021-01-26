@@ -2,14 +2,14 @@ def input_numbers() -> [int]:
     return [int(n) for n in input().split()]
 
 
-def positive_numbers_only(numbers) -> int:
+def sum_of_positive_numbers_only(numbers) -> int:
     def is_positive(num):
         return num > 0
 
     return sum([n for n in numbers if is_positive(n)])
 
 
-def negative_numbers_only(numbers) -> int:
+def sum_of_negative_numbers_only(numbers) -> int:
     def is_negative(num):
         return num < 0
 
@@ -32,8 +32,8 @@ def final_required_results(negative, positive, compared_result, numbers) -> prin
 
 print(
     final_required_results(
-        negative_numbers_only,
-        positive_numbers_only,
+        sum_of_negative_numbers_only,
+        sum_of_positive_numbers_only,
         compare_abs_of_negative_with_positive_numbers_sum,
         input_numbers())
 )
