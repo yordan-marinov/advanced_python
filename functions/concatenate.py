@@ -3,11 +3,10 @@
 #
 #
 # print(concatenate("Soft", "Uni", "Is", "Great", "!"))
-def concatenate(*args):
-    string = ""
+def concatenate(*args, string=""):
     if args == ():
         return string
-    string += args[0]
+
     return args[0] + concatenate(*args[1:])
 
 
