@@ -37,3 +37,32 @@ print(
         compare_abs_of_negative_with_positive_numbers_sum,
         input_numbers())
 )
+
+# ============= Recursively solved ===============================
+numbers = [int(n) for n in input().split()]
+
+
+def negative_vs_positive(nums, positive=[], negative=[]):
+    def is_positive(n):
+        return n > 0
+
+    if not nums:
+        print(sum(negative))
+        print(sum(positive))
+
+        if abs(sum(negative)) > sum(positive):
+            return f"The negatives are stronger than the positives"
+
+        return f"The positives are stronger than the negatives"
+
+    if is_positive(nums[0]):
+        positive.append(nums[0])
+        nums.remove(nums[0])
+        return negative_vs_positive(nums, positive, negative)
+
+    negative.append(nums[0])
+    nums.remove(nums[0])
+    return negative_vs_positive(nums, positive, negative)
+
+
+print(negative_vs_positive(numbers))
