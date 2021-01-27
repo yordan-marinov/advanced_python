@@ -25,3 +25,18 @@ def input_numbers(numbers):
 
 numbers = [int(n) for n in input().split()]
 print(input_numbers(numbers))
+
+# Recursively solved!
+numbers = [int(n) for n in input().split()]
+
+
+def even_numbers(nums):
+    if not nums:
+        return []
+    if nums[0] % 2 == 0:
+        return [nums[0]] + even_numbers(nums[1:])
+
+    return even_numbers(nums[1:])
+
+
+print(even_numbers(numbers))
