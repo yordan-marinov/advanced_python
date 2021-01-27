@@ -3,9 +3,9 @@
 #
 #
 # print(concatenate("Soft", "Uni", "Is", "Great", "!"))
-def concatenate(*args, string=""):
+def concatenate(*args):
     if args == ():
-        return string
+        return ""
 
     return args[0] + concatenate(*args[1:])
 
