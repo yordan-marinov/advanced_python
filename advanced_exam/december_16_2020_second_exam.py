@@ -1,73 +1,81 @@
-def matrix_from_input(size: int) -> [[int]]:
-    return [[s for s in input()] for _ in range(size)]
+def create_square_matrix(n: int) -> [[str]]:
+    return [[e for e in input()] for _ in range(n)]
 
 
-def find_start_player_position(matrix: [[str]], size: int, player_symbol: str) -> tuple:
-    for row_index in range(size):
-        for col_index in range(size):
-            if matrix[row_index][col_index] == player_symbol:
-                return row_index, col_index
+def valid_position(matrix_size: int, position: tuple) -> bool:
+    row, col = position
+    return 0 <= row < matrix_size and 0 <= col < matrix_size
 
 
-def next_position(position: tuple, given_command: str) -> tuple:
-    moves = {"up": (-1, 0), "down": (1, 0), "left": (0, -1), "right": (0, 1)}
-    return tuple(sum(pair) for pair in zip(position, moves[given_command]))
+def get_player(side: int, matrix: [[str]], player: str) -> tuple:
+    for r in range(side):
+        for c in range(side):
+            if matrix[r][c] == player:
+                return r, c
 
 
-def valid_indexes(position: tuple, size) -> bool:
-    row_index, col_index = position
-    return 0 <= row_index < size and 0 <= col_index < size
+def next_position(current: tuple, next_pos: tuple) -> tuple:
+    return tuple(sum(pair) for pair in zip(current, next_pos))
 
 
-def get_punished(letters: list) -> list:
-    letters.pop()
-    return letters
+def move_player(
+        matrix: [[str]],
+        curr_pos: tuple,
+        next_pos: tuple,
+        player: str,
+        empty: str,
+        initial_list: list
+) -> tuple:
+    if matrix[next_pos[0]][next_pos[1]] not in (player, empty):
+        initial_list.append(matrix[next_pos[0]][next_pos[1]])
+
+    matrix[curr_pos[0]][curr_pos[1]] = empty
+    matrix[next_pos[0]][next_pos[1]] = player
+    curr_pos = next_pos
+    return curr_pos
 
 
-def next_position_is_letter(matrix: [[str]], position: tuple, empty_symbol: str, player_symbol: str) -> bool:
-    row_index, col_index = position
-    return matrix[row_index][col_index] != empty_symbol and matrix[row_index][col_index] != player_symbol
+def commands_position() -> dict:
+    return {
+        "up": (-1, 0),
+        "down": (1, 0),
+        "left": (0, -1),
+        "right": (0, 1),
+    }
 
 
-def move_player(current_pos: tuple, next_pos: tuple, matrix: [[str]], player_symbol: str, empty_symbol: str) -> [[str]]:
-    current_row_index, current_col_index = current_pos
-    next_row_index, next_col_index = next_pos
-    matrix[current_row_index][current_col_index] = empty_symbol
-    matrix[next_row_index][next_col_index] = player_symbol
-    return matrix
+def get_punish(lst: list) -> list:
+    return lst.pop()
 
 
-def get_letter(position: tuple, matrix: [[str]], letters: list) -> list:
-    row_index, col_index = position
-    letter = matrix[row_index][col_index]
-    letters.append(letter)
-    return letters
+def concatenate_letters(count, current_pos):
+    for _ in range(count):
+
+        next_position_player = next_position(current_pos, commands_position()[input()])
+        if not valid_position(size, next_position_player):
+            get_punish(initial_string_as_list)
+            continue
+
+        current_pos = move_player(
+            input_matrix,
+            current_pos,
+            next_position_player,
+            PLAYER,
+            EMPTY,
+            initial_string_as_list
+        )
 
 
-PLAYER_SYMBOL = "P"
-EMPTY_SYMBOL = "-"
+PLAYER = "P"
+EMPTY = "-"
 
-initial_letters = [letter for letter in input()]
-matrix_size = int(input())
-matrix_input = matrix_from_input(matrix_size)
+initial_string_as_list = [e for e in input()]
+size = int(input())
+input_matrix = create_square_matrix(size)
 commands_count = int(input())
-player_position = find_start_player_position(matrix_input, matrix_size, PLAYER_SYMBOL)
+current_position = get_player(size, input_matrix, PLAYER)
 
-for _ in range(commands_count):
-    current_position = player_position
-    command = input()
-    next_possible_position = next_position(current_position, command)
+concatenate_letters(commands_count, current_position)
 
-    if not valid_indexes(next_possible_position, matrix_size):
-        if initial_letters:
-            get_punished(initial_letters)
-        next_possible_position = current_position
-
-    if next_position_is_letter(matrix_input, next_possible_position, EMPTY_SYMBOL, PLAYER_SYMBOL):
-        get_letter(next_possible_position, matrix_input, initial_letters)
-
-    move_player(current_position, next_possible_position, matrix_input, PLAYER_SYMBOL, EMPTY_SYMBOL)
-    player_position = next_possible_position
-
-print("".join(initial_letters))
-print("\n".join("".join(row) for row in matrix_input))
+print(*initial_string_as_list, sep="")
+print("\n".join("".join(row) for row in input_matrix))
