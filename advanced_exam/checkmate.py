@@ -1,71 +1,63 @@
-def checkmate_board(size: int) -> [[str]]:
-    return [input().split() for _ in range(size)]
+EMPTY_CELL = "."
+QUEEN_SYMBOL = "Q"
+KING_SYMBOL = "K"
+BOARD_SIZE = 8
 
 
-def all_queens_positions(matrix: [[str]], queen_symbol: str) -> list:
-    queens = []
+def checkmate_board(size=BOARD_SIZE) -> [[str]]:
+    return [input().split(" ") for _ in range(size)]
+
+
+def find_all_queens(matrix: [[str]], queen=QUEEN_SYMBOL) -> [tuple]:
+    queens_positions_list = []
     for row in range(len(matrix)):
         for col in range(len(matrix)):
-            if matrix[row][col] == queen_symbol:
-                queens.append((row, col))
+            if matrix[row][col] == queen:
+                queens_positions_list.append((row, col))
+    return queens_positions_list
 
-    return queens
+
+def valid_index(position: tuple, size=BOARD_SIZE) -> bool:
+    row, col = position
+    return 0 <= row < size and 0 <= col < size
 
 
-def queen_capture_king(current_position: tuple, matrix: [[str]], queen: str, king: str) -> bool:
-    def valid_indexes(position: tuple, size) -> bool:
-        row_index, col_index = position
-        return 0 <= row_index < size and 0 <= col_index < size
+def next_move(current_position: tuple, next_position: tuple) -> tuple:
+    return tuple(sum(pair) for pair in zip(current_position, next_position))
 
-    def next_queen_position(position: tuple, next_position: tuple) -> tuple:
-        return tuple(sum(pair) for pair in zip(position, next_position))
 
-    def is_queen_next_symbol():
-        return matrix[next_possible[0]][next_possible[1]] != queen
+def king_is_captured(current_queen: tuple, matrix: [[str]], king=KING_SYMBOL, queen=QUEEN_SYMBOL) -> bool:
+    def is_symbol(symbol, position):
+        return matrix[position[0]][position[1]] == symbol
 
-    def is_king_next_symbol() -> bool:
-        return matrix[next_possible[0]][next_possible[1]] == king
-
-    queens_moves = [
-        (-1, -1), (-1, 0), (-1, 1), (0, 1),
-        (1, 1), (1, 0), (1, -1), (0, -1)
+    all_queen_directions = [
+        (-1, 0), (-1, 1), (0, 1), (1, 1),
+        (1, 0), (1, -1), (0, -1), (-1, -1),
     ]
 
-    for queen_move in queens_moves:
-        next_possible = next_queen_position(current_position, queen_move)
-
-        while valid_indexes(next_possible, len(matrix)) and is_queen_next_symbol():
-            if is_king_next_symbol():
+    for direction in all_queen_directions:
+        next_position = next_move(current_queen, direction)
+        while valid_index(next_position) and not is_symbol(queen, next_position):
+            if is_symbol(king, next_position):
                 return True
+            next_position = next_move(next_position, direction)
 
-            next_possible = next_queen_position(next_possible, queen_move)
+
+def play_checkmate(matrix: [[str]]) -> list:
+    queens = find_all_queens(matrix)
+    queens_capturing_king = []
+    for queen in queens:
+        if king_is_captured(queen, matrix):
+            queens_capturing_king.append(list(queen))
+    return queens_capturing_king
 
 
-BOARD_SIZE = 8
-EMPTY_SYMBOL = "."
-QUEEN = "Q"
-KING = "K"
+def print_queens_capturing_the_king(list_of_queens: [tuple]) -> print:
+    if not list_of_queens:
+        print("The king is safe!")
+    else:
+        print(*list_of_queens, sep="\n")
 
-input_matrix = checkmate_board(BOARD_SIZE)
 
-queens_that_captures_king = []
-for queen_position in all_queens_positions(input_matrix, QUEEN):
-    if queen_capture_king(queen_position, input_matrix, QUEEN, KING):
-        queens_that_captures_king.append(list(queen_position))
-
-if queens_that_captures_king:
-    print(*queens_that_captures_king, sep="\n")
-else:
-    print("The king is safe!")
-
-"""
-   0 1 2 3 4 5 6 7
-0  . . . . . . . .
-1  Q . . . . . . .
-2  . K . . . Q . .
-3  . . . Q . . . .
-4  Q . . . Q . . .
-5  . Q . . . . . .
-6  . . . . . . Q .
-7  . Q . Q . . . .
-"""
+board = checkmate_board()
+print_queens_capturing_the_king(play_checkmate(board))
