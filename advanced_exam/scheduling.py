@@ -1,13 +1,12 @@
-def scheduling(lst: [int], searched_index: int) -> int:
-    clock_cycles = 0
-    jobs_integers_dict = {key_index: number for key_index, number in enumerate(lst)}
-    for key, value in sorted(jobs_integers_dict.items(), key=lambda pair: (pair[1], pair[0])):
-        clock_cycles += value
-        if key == searched_index:
-            return clock_cycles
+def find_cycles(dd: dict, searched_index: int) -> int:
+    cycles = 0
+    for index, number in sorted(dd.items(), key=lambda x: x[1]):
+        cycles += number
+        if index == searched_index:
+            return cycles
 
 
-jobs_integers = [int(n) for n in input().split(", ")]
-job_index = int(input())
+indexes_numbers_dict = {index: int(number) for index, number in enumerate(input().split(", "))}
+task_index = int(input())
 
-print(scheduling(jobs_integers, job_index))
+print(find_cycles(indexes_numbers_dict, task_index))
