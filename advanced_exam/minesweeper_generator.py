@@ -1,57 +1,52 @@
-def collect_data_as_list_of_tuples(count_bombs: int) -> list:
-    def convert_to_tuple_of_ints(data) -> tuple:
-        data = data[1:][:-1].split(', ')
-        return tuple(int(n) for n in data)
+BOMB_SYMBOL = "*"
+SURROUNDING_POSITIONS = (
+    (1, 0), (1, -1), (0, -1), (-1, -1),
+    (-1, 0), (-1, 1), (0, 1), (1, 1)
+)
 
-    return [convert_to_tuple_of_ints(input()) for _ in range(count_bombs)]
+
+def get_all_bombs_positions(count) -> list:
+    def get_position(string_input):
+        numbers = string_input[1:-1].split(", ")
+        return tuple(int(n) for n in numbers)
+
+    all_bombs = []
+    for _ in range(count):
+        position = get_position(input())
+        all_bombs.append(position)
+    return all_bombs
 
 
-def add_bombs_to_field(size, bombs: list, bomb: str):
+def minesweeper_generator(size, bombs, all_surroundings=SURROUNDING_POSITIONS, bomb=BOMB_SYMBOL):
+    def valid_index(position):
+        return 0 <= position[0] < size and 0 <= position[1] < size
+
+    def is_bomb(position):
+        return position in bombs
+
+    def get_position_value(current_position):
+        value = 0
+        for surrounding in all_surroundings:
+            possible_pos = tuple(sum(pair) for pair in zip(current_position, surrounding))
+            if valid_index(possible_pos) and is_bomb(possible_pos):
+                value += 1
+        return value
+
     matrix = []
-    for row in range(size):
-        current_row = []
-        for col in range(size):
-            if (row, col) in bombs:
-                current_row.append(bomb)
+    for row_index in range(size):
+        row = []
+        for col_index in range(size):
+            if not is_bomb((row_index, col_index)):
+                row.append(get_position_value((row_index, col_index)))
             else:
-                current_row.append(0)
-        matrix.append(current_row)
-    return matrix
+                row.append(bomb)
+        matrix.append(row)
 
-
-def bombs_counter(matrix: [[]], current_position: tuple, bomb: str) -> int:
-    def valid_indexes(position, size) -> bool:
-        index_row, index_col = position
-        return 0 <= index_row < size and 0 <= index_col < size
-
-    def next_possible_position(current_pos, possible_pos) -> tuple:
-        return tuple(sum(pair) for pair in zip(current_pos, possible_pos))
-
-    possible_pairs_indexes = [
-        (1, 0), (1, -1), (0, -1), (-1, -1),
-        (-1, 0), (-1, 1), (0, 1), (1, 1)
-    ]
-    counter = 0
-    for possible_pair_indexes in possible_pairs_indexes:
-        around_position = next_possible_position(current_position, possible_pair_indexes)
-        if valid_indexes(around_position, len(matrix)) and matrix[around_position[0]][around_position[1]] == bomb:
-            counter += 1
-
-    return counter
+    return "\n".join(" ".join(map(str, row)) for row in matrix)
 
 
 matrix_size = int(input())
 bombs_count = int(input())
+all_bombs_positions = get_all_bombs_positions(bombs_count)
 
-BOMB_SYMBOL = "*"
-
-
-positions_of_bombs = collect_data_as_list_of_tuples(bombs_count)
-matrix_input = add_bombs_to_field(matrix_size, positions_of_bombs, BOMB_SYMBOL)
-
-for row in range(len(matrix_input)):
-    for col in range(len(matrix_input)):
-        if matrix_input[row][col] != BOMB_SYMBOL:
-            matrix_input[row][col] += bombs_counter(matrix_input, (row, col), BOMB_SYMBOL)
-
-print("\n".join(" ".join(map(str, row)) for row in matrix_input))
+print(minesweeper_generator(matrix_size, all_bombs_positions))
