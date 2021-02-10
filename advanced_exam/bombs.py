@@ -1,52 +1,48 @@
-from collections import deque
+from collections import deque, defaultdict
 
 
-bomb_effects = deque([int(i) for i in input().split(", ")])
-bomb_casings = deque([int(i) for i in input().split(", ")])
+def counts_bombs_of_each_type(lst):
+    return [n for n in lst if n >= 3]
 
-bombs = {
+
+BOMBS = {
     40: "Datura Bombs",
     60: "Cherry Bombs",
-    120: "Smoke Decoy Bombs"
+    120: "Smoke Decoy Bombs",
 }
+bombs_counter = {"Datura Bombs": 0, "Cherry Bombs": 0, "Smoke Decoy Bombs": 0}
 
-bombs_counter = {
-    "Datura Bombs": 0,
-    "Cherry Bombs": 0,
-    "Smoke Decoy Bombs": 0,
-}
+bomb_effects = deque([int(n) for n in input().split(", ")])
+bomb_casings = deque([int(n) for n in input().split(", ")][::-1])
 
-is_pouch = False
-while len(bomb_effects) > 0 and len(bomb_casings) > 0:
-    effect = bomb_effects.popleft()
-    casing = bomb_casings.pop()
-
-    if not effect + casing in bombs:
-        bomb_effects.appendleft(effect)
-        casing -= 5
-        bomb_casings.append(casing)
+is_pouch_full = False
+while bomb_effects and bomb_casings:
+    current_effect = bomb_effects.popleft()
+    current_casing = bomb_casings.popleft()
+    current_value = current_effect + current_casing
+    if current_value not in BOMBS:
+        bomb_effects.appendleft(current_effect)
+        bomb_casings.appendleft(current_casing - 5)
         continue
 
-    bombs_counter[bombs[effect + casing]] += 1
+    bombs_counter[BOMBS[current_value]] += 1
 
-    if len([e for e in bombs_counter.values() if e >= 3]) == 3:
-        is_pouch = True
+    if len(counts_bombs_of_each_type(bombs_counter.values())) == len(bombs_counter):
+        is_pouch_full = True
         break
 
-if is_pouch:
-    print("Bene! You have successfully filled the bomb pouch!")
-else:
+if not is_pouch_full:
     print("You don't have enough materials to fill the bomb pouch.")
-
+else:
+    print(f"Bene! You have successfully filled the bomb pouch!")
 if not bomb_effects:
-    print("Bomb Effects: empty")
+    print(f"Bomb Effects: {'empty'}")
 else:
-    print(f"Bomb Effects: {', '.join(str(n) for n in bomb_effects)}")
-
+    print(f"Bomb Effects: {', '.join(map(str, bomb_effects))}")
 if not bomb_casings:
-    print("Bomb Casings: empty")
+    print(f"Bomb Casings: {'empty'}")
 else:
-    print(f"Bomb Casings: {', '.join(str(n) for n in bomb_casings)}")
+    print(f"Bomb Casings: {', '.join(map(str, bomb_casings))}")
 
-for k, v in sorted(bombs_counter.items()):
-    print(f"{k}: {v}")
+for bomb, count in sorted(bombs_counter.items()):
+    print(f"{bomb}: {count}")
