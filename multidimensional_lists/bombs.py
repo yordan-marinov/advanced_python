@@ -1,61 +1,62 @@
-def input_matrix() -> [[int]]:
-    square_matrix_size = int(input())
-    return [
-        [int(n) for n in input().split()]
-        for _ in range(square_matrix_size)
-    ]
+AFTER_EXPLOSION_VALUE = 0
 
 
-def coordinates_to_tuple_of_ints():
-    return [
-        tuple(int(n) for n in numbers.split(','))
-        for numbers in input().split()
-    ]
+def get_matrix(size):
+    return [[int(n) for n in input().split()] for _ in range(size)]
 
 
-def bomb_explosion(matrix, row_index, column_index, value, exploded_value):
-    possible_indexes = [
+def explosions(matrix, bomb_position, bomb_value):
+    def next_move(current_position: tuple, next_position: tuple) -> tuple:
+        return tuple(sum(pair) for pair in zip(current_position, next_position))
+
+    def valid_positions_with_positive_value() -> bool:
+        return (
+                0 <= row_index < len(matrix) and
+                0 <= col_index < len(matrix) and
+                matrix[row_index][col_index] > AFTER_EXPLOSION_VALUE
+        )
+
+    directions = [
+        (-1, 0), (-1, 1), (0, 1), (1, 1),
         (1, 0), (1, -1), (0, -1), (-1, -1),
-        (-1, 0), (-1, 1), (0, 1), (1, 1)
     ]
-
-    for possible_index in possible_indexes:
-        r_index = row_index + possible_index[0]
-        c_index = column_index + possible_index[1]
-
-        if not (
-                0 <= r_index < len(matrix) and
-                0 <= c_index < len(matrix)
-        ):
-            continue
-
-        matrix[row_index][column_index] = exploded_value
-        if matrix[r_index][c_index] > exploded_value:
-            matrix[r_index][c_index] -= value
+    for direction in directions:
+        row_index, col_index = next_move(bomb_position, direction)
+        if valid_positions_with_positive_value():
+            matrix[row_index][col_index] -= bomb_value
 
     return matrix
 
 
-def all_positive_numbers_in_final_matrix(matrix, exploded_value):
-    result = []
-    for row_index in range(len(matrix)):
-        for col_index in range(len(matrix)):
-            if matrix[row_index][col_index] > exploded_value:
-                result.append(matrix[row_index][col_index])
+def explode_bombs(matrix, bombs):
+    for bomb in bombs:
+        value = matrix[bomb[0]][bomb[1]]
+        if value > AFTER_EXPLOSION_VALUE:
+            matrix[bomb[0]][bomb[1]] = AFTER_EXPLOSION_VALUE
+            explosions(matrix, bomb, value)
 
-    return f"Alive cells: {len(result)}\nSum: {sum(result)}"
-
-
-matrix_from_input = input_matrix()
-bombs_coordinates = coordinates_to_tuple_of_ints()
-EXPLODED_VALUE = 0
-
-for bomb_coordinate in bombs_coordinates:
-    row, col = bomb_coordinate
-    bomb_value = matrix_from_input[row][col]
-    if bomb_value > EXPLODED_VALUE:
-        bomb_explosion(matrix_from_input, row, col, bomb_value, EXPLODED_VALUE)
+    return matrix
 
 
-print(all_positive_numbers_in_final_matrix(matrix_from_input, EXPLODED_VALUE))
-print("\n".join(" ".join(str(n) for n in r) for r in matrix_from_input))
+def get_alive_and_sum_bombs(matrix):
+    all_alive = []
+    for row in range(len(matrix)):
+        for col in range(len(matrix)):
+            if matrix[row][col] > 0:
+                all_alive.append(matrix[row][col])
+    return all_alive
+
+
+def print_results(matrix, left_alive):
+    print(f"Alive cells: {len(left_alive)}")
+    print(f"Sum: {sum(left_alive)}")
+    print('\n'.join(' '.join(map(str, row)) for row in matrix))
+
+
+size_matrix = int(input())
+matrix_input = get_matrix(size_matrix)
+bombs_input = [tuple(int(i) for i in element.split(",")) for element in input().split(" ")]
+
+matrix_after_explosions = explode_bombs(matrix_input, bombs_input)
+alive = get_alive_and_sum_bombs(matrix_after_explosions)
+print_results(matrix_after_explosions, alive)
