@@ -3,3 +3,7 @@
 /workspace.xml
 *.pyc
 .DC_Store
+.vscode
+venv
+softuni_venv
+.idea
