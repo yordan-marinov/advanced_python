@@ -35,7 +35,7 @@ class PizzaDelivery:
         self.ingredients[ingredient] -= quantity
         self.price -= ingredient_price * quantity
 
-    def pizza_ordered(self):
+    def make_order(self):
         self.ordered = True
         return (
             f"You've ordered pizza {self.name} prepared with "
