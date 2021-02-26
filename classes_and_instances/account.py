@@ -9,7 +9,7 @@ class Account:
         return self.balance
 
     def debit(self, amount: int):
-        if amount > self.balance:
+        if amount >= self.balance:
             return "Amount exceeded balance"
 
         self.balance -= amount
