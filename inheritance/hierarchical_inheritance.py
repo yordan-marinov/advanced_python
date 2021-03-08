@@ -8,13 +8,14 @@ class Dog(Animal):
         return "barking..."
 
 
-class Cat(Animal):
+class Cat(Dog):
     def meow(self):
         return "meowing..."
 
 
 cat = Cat()
 dog = Dog()
+dog2 = Dog()
 animal = Animal()
 
 print(animal.eat())
@@ -22,3 +23,5 @@ print(dog.eat())
 print(cat.eat())
 print(dog.bark())
 print(cat.meow())
+print(dog2.eat())
+print(help(cat))
