@@ -13,7 +13,8 @@ class Account:
     def balance(self):
         return sum(self._transactions) + self.amount
 
-    def validate_transaction(self, account, amount_to_add: int):
+    @staticmethod
+    def validate_transaction(account, amount_to_add: int):
         if account.balance + amount_to_add < 0:
             raise ValueError("sorry cannot go in debt!")
         account.add_transaction(amount_to_add)
@@ -28,6 +29,9 @@ class Account:
     def __len__(self):
         return len(self._transactions)
 
+    def __reversed__(self):
+        return reversed(self._transactions)
+
     def __getitem__(self, index):
         return self._transactions[index]
 
@@ -39,13 +43,13 @@ class Account:
 
     def __ge__(self, other):
         return self.balance >= other.balance
-    
+
     def __add__(self, other):
         owner = f"{self.owner}&{other.owner}"
-        amount = self.amount
+        amount = self.amount + other.amount
         shared_account = Account(owner, amount)
         shared_account._transactions = self._transactions + other._transactions
-        
+
         return shared_account
 
 
@@ -64,7 +68,7 @@ print(acc[1])
 print(list(reversed(acc)))
 acc2.add_transaction(10)
 acc2.add_transaction(60)
-print(list(acc2))
+# print(list(acc2))
 print(acc > acc2)
 print(acc >= acc2)
 print(acc < acc2)
